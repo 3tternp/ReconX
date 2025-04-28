@@ -20,10 +20,10 @@ def breach_check_manual(email):
     except Exception as e:
         print(f"[-] Error during breach check: {str(e)}")
 
-def shodan_darkweb_check(domain):
+def shodan_darkweb_check(domain, api_key):
     try:
         # Using Shodan API to check for exposed services or data related to the domain
-        url = f"https://api.shodan.io/shodan/host/search?key=YOUR_API_KEY&query={domain}"
+        url = f"https://api.shodan.io/shodan/host/search?key={api_key}&query={domain}"
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
