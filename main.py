@@ -1,17 +1,23 @@
 from modules import dns_recon, email_enum, staff_enum
-import pyfiglet
 
-def banner():
-    ascii_banner = pyfiglet.figlet_format("ReconX")
-    print(ascii_banner)
-    print("Developed by 3tternp | Refined by ChatGPT")
-    print("=" * 50)
+def warning_message():
+    print("="*50)
+    print("!!! WARNING !!!")
+    print("="*50)
+    print("This tool is for educational and authorized testing purposes only.")
+    print("Unauthorized usage against systems without permission is illegal.")
+    print("="*50)
+    accept = input("Do you accept the terms and wish to proceed? (yes/no): ").strip().lower()
+    if accept != 'yes':
+        print("Exiting... User did not accept the terms.")
+        exit()
 
 def main():
-    banner()
+    warning_message()
     print("""
     ReconX - Reconnaissance Tool
-    =============================
+    Developed by 3tternp | Refined by ChatGPT
+    ==========================================
     1. DNS Zone Transfer
     2. DNS Brute Force
     3. DNS Wildcard Check
