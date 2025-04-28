@@ -11,5 +11,9 @@ ReconX is a lightweight reconnaissance tool for penetration testers.
 **Developed by 3tternp | Refined by ChatGPT**
 
 Usage:
+
 ```bash
+
+pip3 install -r requirements.txt
+
 python3 main.py
