@@ -1,12 +1,13 @@
 from modules import dns_recon, email_enum, staff_enum
+import os
 
 def warning_message():
-    print("="*50)
+    print("=" * 50)
     print("!!! WARNING !!!")
-    print("="*50)
+    print("=" * 50)
     print("This tool is for educational and authorized testing purposes only.")
     print("Unauthorized usage against systems without permission is illegal.")
-    print("="*50)
+    print("=" * 50)
     accept = input("Do you accept the terms and wish to proceed? (yes/no): ").strip().lower()
     if accept != 'yes':
         print("Exiting... User did not accept the terms.")
@@ -27,7 +28,7 @@ def main():
     7. Staff Enumeration - LinkedIn Dork
     8. Staff Enumeration - Google Dork
     9. Staff Enumeration - Scrape About Page
-    10. Staff Enumeration - Generate Email Guesses
+    10. Staff Enumeration - Full Scraper + Generate Email Guesses
     """)
     choice = input("Enter your choice: ")
 
@@ -61,10 +62,14 @@ def main():
         staff_enum.scrape_names_from_about_page(url)
     elif choice == '10':
         domain = input("Enter domain: ")
-        names_file = 'output/staff_names.txt'
-        staff_enum.generate_email_guesses(domain, names_file)
+        staff_enum.scrape_staff_names(domain)  # New full multi-source staff scraper
+        names_file = 'output/staff_list.txt'
+        if os.path.exists(names_file):
+            staff_enum.generate_email_guesses(domain, names_file)
+        else:
+            print("[-] Staff list not found. Scraping may have failed.")
     else:
-        print("Invalid choice")
+        print("[-] Invalid choice. Please select a valid option.")
 
 if __name__ == "__main__":
     main()
