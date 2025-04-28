@@ -8,7 +8,6 @@ ReconX is a lightweight reconnaissance tool for penetration testers.
 - Staff Enumeration
 - Email Guess Generator
 
-**Developed by 3tternp | Refined by ChatGPT**
 
 Usage:
 
