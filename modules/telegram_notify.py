@@ -1,13 +1,25 @@
 import requests
 
-def real_time_breach_alerts(channel):
+def real_time_breach_alerts(telegram_channel):
     try:
-        # Use Telegram API to send breach alerts to a channel
-        url = f"https://api.telegram.org/botYOUR_BOT_API/sendMessage?chat_id={channel}&text=New breach found!"
-        response = requests.get(url)
+        bot_token = input("Enter your Telegram Bot Token: ").strip()  # Get bot token from user
+        chat_id = telegram_channel.strip()  # Use the chat ID (could be channel or group ID)
+
+        message = "Security alert: Potential breach detected!"  # Customize the alert message
+
+        # Send message to the specified Telegram chat
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        params = {
+            'chat_id': chat_id,
+            'text': message
+        }
+
+        response = requests.post(url, data=params)
+
         if response.status_code == 200:
-            print(f"[+] Sent real-time breach alert to {channel}")
+            print(f"[+] Alert sent to {chat_id}")
         else:
-            print(f"[-] Failed to send alert: {response.status_code}")
+            print(f"[-] Failed to send alert: {response.status_code} - {response.text}")
+
     except Exception as e:
-        print(f"[-] Error sending alert: {str(e)}")
+        print(f"[-] Error while sending alert: {str(e)}")
