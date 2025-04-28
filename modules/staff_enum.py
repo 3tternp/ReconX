@@ -1,58 +1,76 @@
 # modules/staff_enum.py
-
+import os
 import re
 import requests
 from bs4 import BeautifulSoup
-import os
 
-def linkedin_dork(domain):
-    print(f"[!] LinkedIn Dorks to use manually:")
-    print(f"https://www.google.com/search?q=site:linkedin.com/in+@{domain}")
-    print(f"https://www.linkedin.com/search/results/people/?keywords={domain}")
-
-def google_staff_search(domain):
-    print(f"[!] Google Dork for employees:")
-    print(f"https://www.google.com/search?q=site:{domain}+team+contact")
-
-def scrape_names_from_about_page(url):
-    print(f"[*] Scraping names from {url}")
+def scrape_about_page(url):
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=10)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
+            # Collect all text
             text = soup.get_text(separator=' ')
-            potential_names = re.findall(r'\b[A-Z][a-z]+(?:\s[A-Z]\.)?(?:\s[A-Z][a-z]+)+\b', text)
-            unique_names = set(potential_names)
-            if unique_names:
-                os.makedirs("output", exist_ok=True)
-                save_path = "output/staff_names.txt"
-                with open(save_path, 'w') as f:
-                    for name in unique_names:
-                        print(f"[+] {name}")
-                        f.write(name + "\n")
-                print(f"\n[✔] Saved {len(unique_names)} names to {save_path}")
-            else:
-                print("[-] No names found.")
+            # Basic regex for Firstname Lastname pattern
+            pattern = r'\b[A-Z][a-z]+ [A-Z][a-z]+\b'
+            matches = re.findall(pattern, text)
+            return matches
         else:
-            print(f"[-] Failed to fetch {url}")
+            print(f"[-] Failed to access {url}")
+            return []
     except Exception as e:
-        print(f"[-] Error: {str(e)}")
+        print(f"[-] Error scraping About page: {str(e)}")
+        return []
 
-def generate_email_guesses(domain, names_file):
+def google_dork_search(query):
     try:
-        with open(names_file, 'r') as f:
-            names = f.read().splitlines()
-        print("\n[*] Generated email guesses:")
-        for name in names:
-            parts = name.lower().split()
-            if len(parts) >= 2:
-                first, last = parts[0], parts[-1]
-                guesses = [
-                    f"{first}.{last}@{domain}",
-                    f"{first}{last}@{domain}",
-                    f"{first[0]}{last}@{domain}"
-                ]
-                for email in guesses:
-                    print(f"[+] {email}")
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        }
+        url = f"https://www.google.com/search?q={query}"
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            snippets = soup.find_all('span')
+            text = ' '.join([s.get_text() for s in snippets])
+            pattern = r'\b[A-Z][a-z]+ [A-Z][a-z]+\b'
+            matches = re.findall(pattern, text)
+            return matches
+        else:
+            print(f"[-] Failed Google Dork: {query}")
+            return []
     except Exception as e:
-        print(f"[-] Error generating emails: {str(e)}")
+        print(f"[-] Error during Google Dorking: {str(e)}")
+        return []
+
+def scrape_staff_names(domain):
+    all_names = set()
+
+    about_url = f"https://{domain}/about"
+    print(f"[+] Scraping About Page: {about_url}")
+    names = scrape_about_page(about_url)
+    all_names.update(names)
+
+    dork1 = f'site:linkedin.com "at {domain}"'
+    print(f"[+] Dorking LinkedIn...")
+    names = google_dork_search(dork1)
+    all_names.update(names)
+
+    dork2 = f'"work at {domain}"'
+    print(f"[+] Dorking Google for work mentions...")
+    names = google_dork_search(dork2)
+    all_names.update(names)
+
+    output_folder = "output"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    output_file = os.path.join(output_folder, "staff_list.txt")
+    with open(output_file, "w") as f:
+        for name in sorted(all_names):
+            f.write(name + "\n")
+
+    if all_names:
+        print(f"[+] Found {len(all_names)} unique staff names. Saved to {output_file}")
+    else:
+        print(f"[-] No staff names found.")
