@@ -14,7 +14,8 @@ Usage:
 ```bash
 
 pip install -r requirements.txt
-![Screenshot 2025-04-28 220332](https://github.com/user-attachments/assets/89e17cc1-6f69-4f34-af6c-905129739dd6)
+
+![Screenshot 2025-04-28 220332](https://github.com/user-attachments/assets/896013b9-3bd5-4473-9703-e83894369e80)
 
 
 python3 main.py
