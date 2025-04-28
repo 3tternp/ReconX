@@ -1,4 +1,4 @@
-from modules import dns_recon, email_enum, staff_enum, darkweb_monitor, telegram_notify
+from modules import dns_recon, email_enum, darkweb_monitor, telegram_notify
 import os
 
 def warning_message():
@@ -16,20 +16,16 @@ def warning_message():
 def main():
     warning_message()
     print("""
-    ReconX - Reconnaissance Tool
-    Developed by 3tternp | Refined by ChatGPT
+    ReconX - Simplified Dark Web Monitoring Tool
     ==========================================
     1. DNS Zone Transfer
     2. DNS Brute Force
     3. DNS Wildcard Check
-    4. Email Enumeration - Google Dork
-    5. Email Enumeration - Scrape Website
-    6. Dark Web Breach Check (Manual)
-    7. Telegram Channel Monitoring
-    8. Dark Web Monitoring (OSINT Tools)
-    9. Monitor Dark Web with Tor/I2P
-    10. Real-Time Telegram Breach Alerts
+    4. Email Breach Check - Have I Been Pwned
+    5. Domain Exposure Check - Shodan (Dark Web)
+    6. Real-Time Telegram Breach Alerts
     """)
+
     choice = input("Enter your choice: ")
 
     if choice == '1':
@@ -43,25 +39,14 @@ def main():
         domain = input("Enter domain: ")
         dns_recon.dns_wildcard_check(domain)
     elif choice == '4':
-        domain = input("Enter domain: ")
-        email_enum.google_dork_emails(domain)
-    elif choice == '5':
-        url = input("Enter URL to scrape: ")
-        email_enum.scrape_emails_from_url(url)
-    elif choice == '6':
         email = input("Enter email for breach check: ")
-        darkweb_monitor.breach_check_manual(email)  # New Dark Web Breach Check option
-    elif choice == '7':
+        darkweb_monitor.breach_check_manual(email)  # Using Have I Been Pwned API
+    elif choice == '5':
+        domain = input("Enter domain for exposure check: ")
+        darkweb_monitor.shodan_darkweb_check(domain)  # Shodan check for exposed services
+    elif choice == '6':
         telegram_channel = input("Enter Telegram channel: ")
-        telegram_notify.monitor_telegram_channel(telegram_channel)  # Telegram monitoring
-    elif choice == '8':
-        domain = input("Enter domain: ")
-        darkweb_monitor.osint_tools_darkweb_monitoring(domain)  # OSINT Dark Web Monitoring
-    elif choice == '9':
-        darkweb_monitor.monitor_darkweb_tor_i2p()  # Dark web with Tor/I2P
-    elif choice == '10':
-        telegram_channel = input("Enter Telegram channel: ")
-        telegram_notify.real_time_breach_alerts(telegram_channel)  # Real-time Telegram Breach Alerts
+        telegram_notify.real_time_breach_alerts(telegram_channel)  # Send real-time alerts
     else:
         print("[-] Invalid choice. Please select a valid option.")
 
