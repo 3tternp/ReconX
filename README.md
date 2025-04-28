@@ -15,8 +15,8 @@ Usage:
 
 pip install -r requirements.txt
 
-![Screenshot 2025-04-28 220332](https://github.com/user-attachments/assets/896013b9-3bd5-4473-9703-e83894369e80)
 
+![requirement](https://github.com/user-attachments/assets/7c47c44c-28c1-44d4-99c2-d8528accd30f)
 
 python3 main.py
 
