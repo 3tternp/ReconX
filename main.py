@@ -1,4 +1,4 @@
-from modules import dns_recon, email_enum, staff_enum
+from modules import dns_recon, email_enum, staff_enum, darkweb_monitor, telegram_notify
 import os
 
 def warning_message():
@@ -24,11 +24,11 @@ def main():
     3. DNS Wildcard Check
     4. Email Enumeration - Google Dork
     5. Email Enumeration - Scrape Website
-    6. Email Enumeration - Breach Check (Manual)
-    7. Staff Enumeration - LinkedIn Dork
-    8. Staff Enumeration - Google Dork
-    9. Staff Enumeration - Scrape About Page
-    10. Staff Enumeration - Full Scraper + Generate Email Guesses
+    6. Dark Web Breach Check (Manual)
+    7. Telegram Channel Monitoring
+    8. Dark Web Monitoring (OSINT Tools)
+    9. Monitor Dark Web with Tor/I2P
+    10. Real-Time Telegram Breach Alerts
     """)
     choice = input("Enter your choice: ")
 
@@ -49,25 +49,19 @@ def main():
         url = input("Enter URL to scrape: ")
         email_enum.scrape_emails_from_url(url)
     elif choice == '6':
-        email = input("Enter email to check: ")
-        email_enum.basic_hibp_check(email)
+        email = input("Enter email for breach check: ")
+        darkweb_monitor.breach_check_manual(email)  # New Dark Web Breach Check option
     elif choice == '7':
-        domain = input("Enter domain: ")
-        staff_enum.linkedin_dork(domain)
+        telegram_channel = input("Enter Telegram channel: ")
+        telegram_notify.monitor_telegram_channel(telegram_channel)  # Telegram monitoring
     elif choice == '8':
         domain = input("Enter domain: ")
-        staff_enum.google_staff_search(domain)
+        darkweb_monitor.osint_tools_darkweb_monitoring(domain)  # OSINT Dark Web Monitoring
     elif choice == '9':
-        url = input("Enter About page URL: ")
-        staff_enum.scrape_names_from_about_page(url)
+        darkweb_monitor.monitor_darkweb_tor_i2p()  # Dark web with Tor/I2P
     elif choice == '10':
-        domain = input("Enter domain: ")
-        staff_enum.scrape_staff_names(domain)  # New full multi-source staff scraper
-        names_file = 'output/staff_list.txt'
-        if os.path.exists(names_file):
-            staff_enum.generate_email_guesses(domain, names_file)
-        else:
-            print("[-] Staff list not found. Scraping may have failed.")
+        telegram_channel = input("Enter Telegram channel: ")
+        telegram_notify.real_time_breach_alerts(telegram_channel)  # Real-time Telegram Breach Alerts
     else:
         print("[-] Invalid choice. Please select a valid option.")
 
